@@ -28,24 +28,6 @@ Feature: Register Handler
     When I run cucumber.js
     And the exit status should be 0
 
-  Scenario: synchronously throws
-    Given a file named "features/support/handlers.js" with:
-      """
-      var handlers = function() {
-        this.registerHandler('AfterFeatures', function(){
-          throw new Error('my error');
-        });
-      };
-
-      module.exports = handlers;
-      """
-    When I run cucumber.js
-    And the exit status should be non-zero
-    And the error output contains the text:
-      """
-      features/support/handlers.js:2 my error
-      """
-
   Scenario: callback without error
     Given a file named "features/support/handlers.js" with:
       """
@@ -97,26 +79,6 @@ Feature: Register Handler
       """
     When I run cucumber.js
     And the exit status should be non-zero
-
-  Scenario: callback - returning a promise
-    Given a file named "features/support/handlers.js" with:
-      """
-      var handlers = function() {
-        this.registerHandler('AfterFeatures', function(features, callback) {
-          return {
-            then: function() {}
-          };
-        });
-      };
-
-      module.exports = handlers;
-      """
-    When I run cucumber.js
-    And the exit status should be non-zero
-    And the error output contains the text:
-      """
-      features/support/handlers.js:2 function accepts a callback and returns a promise
-      """
 
   Scenario: promise resolves
     Given a file named "features/support/handlers.js" with:
